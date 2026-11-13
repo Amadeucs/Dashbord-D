@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Analisis kelayakan finansial laundry helm otomatis Stop, Clean &amp; Go: arus kas lima tahun, NPV, IRR, B/C ratio, payback, dan titik impas.">
+<title>Stop, Clean &amp; Go | Analisis Kelayakan Finansial</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{color-scheme:dark;--bg:#1A1A1A;--card:#242424;--soft:#2E2E2E;--line:#3A3A3A;--ink:#F2F0EA;--mute:#A8A59C;--acc:#E2C447;--gold2:#C9A84C;--on:#1A1A1A;--or:#C98A3C;--lt:#F2F0EA;--tl:#45B5AA;--cr:#E8795A;--gr:#8A8A8F;--pos:#5FCB80;--neg:#F07878;--sh:0 2px 12px rgba(0,0,0,.35);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 64px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;line-height:1.6}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.wrap{max-width:1280px;margin:0 auto;padding:16px 1.5rem 80px}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.wrap>*{animation:rise .42s ease-out both}
+.wrap>*:nth-child(2){animation-delay:.08s}.wrap>*:nth-child(3){animation-delay:.16s}.wrap>*:nth-child(4){animation-delay:.24s}
+@media (prefers-reduced-motion:reduce){.wrap>*{animation:none}html{scroll-behavior:auto}}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:100;display:flex;gap:4px;flex-wrap:wrap;padding:10px 0;background:var(--bg);border-bottom:1px solid var(--line);margin-bottom:24px}
+nav a{font-size:.875rem;font-weight:500;color:var(--mute);text-decoration:none;padding:8px 14px;border-radius:8px;transition:color .2s ease-out,background .2s ease-out}
+nav a:hover{color:var(--acc);background:var(--soft)}
+.top{display:grid;grid-template-columns:1.25fr 1fr;gap:32px;align-items:center;background:radial-gradient(120% 140% at 0% 0%,#34301A 0%,#1F1F1F 55%);border:1px solid var(--line);border-radius:24px;padding:clamp(24px,5vw,56px)}
+.eyebrow{font-size:.875rem;font-weight:500;letter-spacing:.02em;color:var(--gold2)}
+h1{font-size:clamp(2.5rem,5vw,4rem);letter-spacing:-.035em;margin:10px 0 6px;font-weight:700;line-height:1.02}
+.sub{color:var(--mute);font-size:1.15rem;margin:0 0 20px;max-width:36ch}
+.tags{display:flex;gap:8px;flex-wrap:wrap}
+.tag{font-family:"JetBrains Mono",monospace;font-size:.78rem;background:var(--card);padding:6px 12px;border-radius:8px;border:1px solid var(--line)}
+.tag b{color:var(--mute);font-weight:400}
+.hs{background:linear-gradient(160deg,#2F2B17 0%,var(--card) 65%);border:1px solid color-mix(in srgb,var(--acc) 40%,var(--line));border-radius:16px;padding:24px;box-shadow:var(--sh);transition:box-shadow .2s ease-out}
+.hs:hover{box-shadow:0 0 22px rgba(226,196,71,.14)}
+.hs .st{font-size:.875rem;font-weight:500;color:var(--mute)}
+.hs .big{font-family:"JetBrains Mono",monospace;font-size:clamp(1.9rem,3.6vw,2.8rem);font-weight:500;letter-spacing:-.03em;margin:4px 0 2px}
+.hs .hc{font-size:.8rem;color:var(--mute)}
+.hs .hr{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+.hs .hr b{display:block;font-family:"JetBrains Mono",monospace;font-size:1.25rem;font-weight:500}
+.hs .hr span{font-size:.78rem;color:var(--mute)}
+button{font:inherit;cursor:pointer}
+.btn{font-size:.875rem;font-weight:600;letter-spacing:.01em;background:var(--acc);color:var(--on);border:0;padding:12px 18px;border-radius:8px;transition:filter .2s ease-out,transform .2s ease-out,box-shadow .2s ease-out}
+.btn:hover{filter:brightness(.92);transform:translateY(-1px);box-shadow:var(--sh)}
+.btn:active{transform:translateY(1px)}
+section{margin-top:clamp(3rem,6vw,5rem)}
+h2{font-size:1.5rem;margin:0 0 4px;letter-spacing:-.015em;font-weight:700}
+h2 small{display:block;font-size:.875rem;color:var(--mute);font-weight:400;margin:4px 0 0}
+.card{background:var(--card);border-radius:8px;box-shadow:var(--sh);padding:20px;border:1px solid var(--line);margin-top:16px}
+.card h2[style]{font-size:1.05rem!important}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(2,1fr);column-gap:32px;row-gap:20px}
+.split{grid-template-columns:1fr}
+.asum{display:grid;grid-template-columns:1.7fr 1fr;gap:32px;align-items:start}
+.asum .side{display:flex;flex-direction:column;gap:18px;background:var(--soft);border-radius:8px;padding:20px}
+.asum .side .note{margin:0}
+.asum .side .btn{align-self:flex-start}
+@media(max-width:900px){.split,.asum{grid-template-columns:1fr}}
+@media(max-width:768px){.g2{grid-template-columns:1fr}.top{grid-template-columns:1fr}}
+.sl label{display:flex;justify-content:space-between;align-items:center;font-weight:500;font-size:.9rem;gap:8px}
+.sl input[type=number]{width:100px;font-family:"JetBrains Mono",monospace;font-size:.9rem;text-align:right;padding:7px 10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:8px}
+.sl input[type=range]{width:100%;accent-color:var(--acc);margin:10px 0 2px}
+.sl .rg{display:flex;justify-content:space-between;font-family:"JetBrains Mono",monospace;font-size:.7rem;color:var(--mute)}
+.note{font-size:.875rem;color:var(--mute);margin:14px 0 0;max-width:72ch}
+.verdict{background:color-mix(in srgb,var(--or) 14%,var(--card));border:1px solid color-mix(in srgb,var(--or) 50%,var(--line));border-radius:8px;padding:14px 18px;margin-top:16px;font-size:1rem}
+.verdict.ok{background:color-mix(in srgb,var(--pos) 12%,var(--card));border-color:color-mix(in srgb,var(--pos) 50%,var(--line))}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-top:16px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px 16px;box-shadow:var(--sh);transition:box-shadow .2s ease-out,border-color .2s ease-out}
+.kpi:hover{border-color:color-mix(in srgb,var(--acc) 45%,var(--line));box-shadow:0 0 18px rgba(226,196,71,.12)}
+.kpi .l{font-size:.8rem;font-weight:500;letter-spacing:.02em;color:var(--mute)}
+.kpi .v{font-family:"JetBrains Mono",monospace;font-size:1.5rem;font-weight:500;letter-spacing:-.02em;margin-top:2px}
+.kpi .c{font-size:.75rem;color:var(--mute)}
+.pos{color:var(--pos)}.neg{color:var(--neg)}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.875rem}
+th{font-size:.78rem;font-weight:500;letter-spacing:.02em;color:var(--mute);background:var(--soft);padding:9px 12px;text-align:right;white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+td{padding:7px 12px;text-align:right;font-family:"JetBrains Mono",monospace;font-size:.78rem;border-bottom:1px solid var(--line);white-space:nowrap}
+td:first-child{font-family:inherit;font-size:.875rem;white-space:normal;min-width:200px}
+tr.grp td{font-size:.85rem;font-weight:700;color:var(--gold2);border-bottom:0;padding-top:18px;font-family:inherit}
+tr.tot td{font-weight:700;background:var(--soft)}
+td.tx{white-space:normal;text-align:left;font-family:inherit;font-size:.8rem;min-width:150px}
+tr.ind td:first-child{padding-left:26px}
+td.hl{outline:2px solid var(--acc);outline-offset:-2px;font-weight:700;border-radius:4px}
+.bar{height:6px;background:var(--soft);border-radius:4px;overflow:hidden;min-width:90px}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold2),var(--acc))}
+.chart{width:100%;height:auto;display:block}
+.tip{position:fixed;z-index:500;display:none;pointer-events:none;background:var(--ink);color:var(--bg);font-family:"JetBrains Mono",monospace;font-size:.75rem;padding:8px 12px;border-radius:8px;line-height:1.5;box-shadow:0 4px 16px rgba(0,0,0,.4)}
+.chart text.h{paint-order:stroke;stroke:var(--card);stroke-width:4px;stroke-linejoin:round}
+.hv{cursor:pointer;transition:opacity .2s}.hv:hover{opacity:.78}
+.chart text{fill:var(--mute);font-family:"JetBrains Mono",monospace;font-size:11px}
+.leg{display:flex;gap:16px;font-size:.78rem;color:var(--mute);margin-top:8px;flex-wrap:wrap}.leg i{display:inline-block;width:12px;height:3px;margin-right:6px;vertical-align:middle;border-radius:2px}
+footer{margin-top:56px;color:var(--mute);font-size:.78rem;font-family:"JetBrains Mono",monospace}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="top"><div>
+<div class="eyebrow">Analisis Kelayakan Finansial · Laundry Helm Otomatis</div>
+<h1>Stop, Clean &amp; Go</h1>
+<p class="sub">Arus kas lima tahun, NPV, IRR, dan titik impas</p>
+<div class="tags"><span class="tag"><b>Satuan</b> Rp juta</span><span class="tag"><b>Horizon</b> t = 0 … 5</span><span class="tag"><b>Mesin</b> 1 unit, 6 helm/jam</span></div></div>
+<aside class="hs" id="hs" aria-live="polite"></aside></div>
+<nav><a href="#asumsi">Asumsi</a><a href="#hasil">Hasil</a><a href="#kertas">Kertas kerja</a><a href="#biaya">CAPEX &amp; OPEX</a><a href="#sens">Sensitivitas</a></nav>
+
+<section id="asumsi"><h2>Asumsi dinamis <small>Geser pengungkit, seluruh hasil dihitung ulang</small></h2>
+<div class="card asum"><div class="grid g2" id="sliders"></div>
+<div class="side">
+<p class="note">Discount rate = yield SBN 10 tahun + inflasi. Biaya per item CAPEX dan OPEX tetap sesuai sheet Cash Flow; perubahan CAPEX dan OPEX diterapkan sebagai persentase atas totalnya. Volume tumbuh per tahun mulai tahun ke-2.</p>
+<button class="btn" id="reset">Kembalikan nilai model</button></div></div></section>
+
+<section id="hasil"><h2>Hasil <small>Layak jika NPV &gt; 0, IRR &gt; discount rate, dan B/C &gt; 1</small></h2>
+<div class="verdict" id="verdict"></div><div class="kpis" id="kpis"></div>
+<div class="grid split">
+<div class="card"><h2 style="font-size:16px">Analisis Kelayakan Keuangan - Stop Clean &amp; Go <small>Kumulatif arus kas, Rp juta</small></h2><svg class="chart" id="c1" viewBox="0 0 760 380"></svg>
+<div class="leg"><span><i style="background:var(--acc);height:10px"></i>Kumulatif Net Cash Flow</span><span><i style="background:var(--tl);height:10px"></i>NPV kumulatif (PV Net Cash Flow)</span><span><i style="background:var(--lt)"></i>IRR kumulatif sampai tahun ke-t (%)</span><span><i style="background:var(--cr);height:4px"></i>Payback</span></div></div>
+<div class="card"><h2 style="font-size:16px">Revenue, OPEX, dan net cash flow <small>Rp juta</small></h2><svg class="chart" id="c2" viewBox="0 0 760 300"></svg>
+<div class="leg"><span><i style="background:var(--acc)"></i>Revenue</span><span><i style="background:var(--cr)"></i>OPEX</span><span><i style="background:var(--tl)"></i>Net cash flow</span></div></div></div>
+<div class="card"><h2 style="font-size:16px">Titik impas (NPV = 0)</h2><div class="kpis" id="be" style="margin-top:8px"></div></div></section>
+
+<section id="kertas"><h2>Kertas kerja <small>Seluruh nilai dalam Rp juta, kecuali dinyatakan lain</small></h2>
+<div class="card tw"><table id="ws"></table></div></section>
+
+<section id="biaya"><h2>Rincian CAPEX dan OPEX</h2>
+<div class="card tw"><table id="tcap"></table></div><div class="card tw"><table id="topx"></table></div><div class="card tw"><table id="tkap"></table></div></section>
+
+<section id="sens"><h2>Analisis sensitivitas <small>NPV (Rp juta) terhadap volume per hari dan perubahan OPEX</small></h2>
+<div class="card tw"><table id="tsens"></table><p class="note">Sel berbingkai adalah volume dan OPEX yang sedang dipilih pada slider (jika cocok dengan salah satu kolom). Merah berarti NPV negatif. Perubahan CAPEX dan harga mengikuti slider.</p></div></section>
+
+<footer>Sumber: Stop_Clean_&amp;_Go - EvalPro.xlsx (sheet Asumsi Capex, Asumsi Opex, Kapasitas Mesin, Cash Flow, NPV-IRR, Data Grafik)</footer>
+</div>
+<script>
+const CAP=[["Mesin Cuci Helm","PT Sprint Karya Inovasi","1 pcs",37495000,"Tokopedia",2026],["Biaya Ongkir","-","lumpsum",290000,"Tokopedia",2026],["Biaya Booth","-","1 set",3000000,"Workshop Booth Indonesia",2026],["Banner","Fauzan Digital Printing","1 pcs",112000,"Shopee",2026],["Sikat Pembersih","Angola","1 pcs",7000,"Shopee",2026],["Sarung Tangan","EJ PRO","1 pcs",20000,"Shopee",2026],["Pel/Wiper Lantai","Dragon Pel Karet","1 pcs",21599,"Shopee",2026],["Sapu Lidi","Perabot Alam","1 pcs",8000,"Shopee",2026],["Tempat Sampah","Panda Star 5 liter","1 pcs",15172,"Shopee",2026]];
+const OPX=[["Internet / kuota IoT","IM3 (Indosat) Freedom Internet 10 GB, 30 hari","paket",40000,"Selular",2026,"Operasional"],["Liquid Steam","Kebutuhan 28,17 liter/bulan, dari Sprint","liter",1056667,"Sprint",2025,"Bahan Baku"],["Liquid Fogging","Kebutuhan 2,64 liter/bulan, dari Sprint","liter",98750,"Sprint",2025,"Bahan Baku"],["Kain lap microfiber 30x40","-","3 pcs",10500,"Shopee",2026,"Perawatan"],["Cairan descaler (anti kerak)","Astonish Lime Blast 1 L","botol",115500,"Shopee",2026,"Perawatan"],["Disinfektan","Natura X-100 Sanitizer Disinfectant 500 ML","botol",30000,"Shopee",2026,"Perawatan"],["Plastik tempat sampah","Klinpak Kantong Sampah Kecil","30 pcs",45000,"Shopee",2026,"Perawatan"],["Cartridge sediment PP 10\" 5 micron","Nazava Spun Filter Cartridge","2 pcs",38000,"Shopee",2026,"Perawatan Filter Air"],["Cartridge karbon CTO 10\"","Filter Cartridge CTO Carbon Block 10 Inch","1 pcs",28000,"Shopee",2026,"Perawatan Filter Air"],["Cadangan risiko & klaim helm","-","bulan",200000,"-",2026,"Cadangan Risiko"],["Listrik + standby","22 hari kerja + 8 hari standby, 215 kWh x Rp1.444,70/kWh","kWh",73956,"Shopee",2026,"Utilitas"],["Biaya air","PDAM Tirta Medal Sumedang, Rp7.567/m3 x 5.280 liter","m3",29953,"Shopee",2026,"Utilitas"],["Gaji karyawan (1 orang)","UMK Kab. Sumedang 2026","bulan",3949856,"Pemerintah Kab. Sumedang",2026,"Tenaga Kerja"],["Sewa lahan di SPBU","Ukuran 3 m2","bulan",2333000,"Brightspace",2026,"Sewa"],["Depresiasi mesin cuci helm","Umur manfaat 4 tahun (48 bulan)","bulan",781145,"Jurnal Mekari",2026,"Non-tunai"]];
+const sum=a=>a.reduce((s,x)=>s+x[3],0);const CAPT=sum(CAP),OPXT=sum(OPX);
+function irrOf(nf){let lo=-0.99,hi=100;const f=q=>nf.reduce((a,v,i)=>a+v/Math.pow(1+q,i),0);if(f(lo)*f(hi)>=0)return null;for(let i=0;i<200;i++){const m=(lo+hi)/2;if(f(lo)*f(m)<=0)hi=m;else lo=m}return (lo+hi)/2}
+const DEF={vol:36,hari:22,harga:20000,g:0,dOpex:0,dCapex:0,sbn:7.64,infl:3.23};
+const CFG=[["vol","Volume per hari","helm/hari",12,48,1],["hari","Hari operasi per bulan","hari",15,30,1],["harga","Harga cuci helm","Rp/helm",8000,35000,500],["g","Pertumbuhan volume","%/tahun",-10,30,1],["dOpex","Perubahan OPEX","%",-30,50,1],["dCapex","Perubahan CAPEX","%",-30,50,1],["sbn","Yield SBN 10 tahun","%",3,12,0.01],["infl","Inflasi Indonesia","%",0,10,0.01]];
+let S={...DEF};
+const f2=n=>n.toLocaleString("id-ID",{minimumFractionDigits:2,maximumFractionDigits:2});
+const f0=n=>n.toLocaleString("id-ID",{maximumFractionDigits:0});
+const jt=n=>f2(n/1e6);
+function calc(s){
+ const r=(s.sbn+s.infl)/100,capex=CAPT*(1+s.dCapex/100),opexY=OPXT*12*(1+s.dOpex/100),R=[];
+ for(let t=0;t<=5;t++){const vm=t?s.vol*s.hari*Math.pow(1+s.g/100,t-1):0,rev=vm*s.harga*12,opex=t?opexY:0,cap=t?0:capex,ocf=rev-opex,net=ocf-cap,df=1/Math.pow(1+r,t);
+  R.push({t,vm,rev,opex,cap,ocf,net,df,pvr:rev*df,pvo:opex*df,pvc:cap*df,pvn:net*df});}
+ let k=0,kp=0;R.forEach(x=>{k+=x.net;kp+=x.pvn;x.cum=k;x.cumpv=kp});
+ const npv=kp,PVR=R.reduce((a,x)=>a+x.pvr,0),PVO=R.reduce((a,x)=>a+x.pvo,0),PVC=capex,PVOCF=R.reduce((a,x)=>a+x.ocf*x.df,0);
+ const pb=(key,nk)=>{for(let t=1;t<=5;t++){if(R[t][key]>=0&&R[t-1][key]<0)return (t-1)+(-R[t-1][key])/R[t][nk];}return null};
+ const pay=pb("cum","net"),dpay=pb("cumpv","pvn");
+ const nf=R.map(x=>x.net);let lo=-0.99,hi=100,irr=null;const npvAt=q=>nf.reduce((a,v,i)=>a+v/Math.pow(1+q,i),0);
+ if(npvAt(lo)*npvAt(hi)<0){for(let i=0;i<200;i++){const m=(lo+hi)/2;if(npvAt(lo)*npvAt(m)<=0)hi=m;else lo=m}irr=(lo+hi)/2}
+ const bc=PVR/(PVO+PVC),pi=PVC?PVOCF/PVC:null;
+ const be={vol:PVR?s.vol*(PVO+PVC)/PVR:null,price:PVR?s.harga*(PVO+PVC)/PVR:null};be.drop=PVR?1-(PVO+PVC)/PVR:null;
+ return{R,r,capex,opexY,npv,irr,bc,pi,pay,dpay,be,PVR,PVO,PVC};
+}
+function build(){
+ const el=document.getElementById("sliders");
+ CFG.forEach(([k,l,u,mn,mx,st])=>{const d=document.createElement("div");d.className="sl";
+  d.innerHTML=`<label>${l}<input type="number" id="n_${k}" step="${st}"></label><input type="range" id="r_${k}" min="${mn}" max="${mx}" step="${st}"><div class="rg"><span>${mn}</span><span>${u}</span><span>${mx}</span></div>`;
+  el.appendChild(d);
+  const rg=d.querySelector("[type=range]"),nm=d.querySelector("[type=number]");
+  const set=v=>{v=parseFloat(v);if(isNaN(v))return;S[k]=v;rg.value=v;if(document.activeElement!==nm)nm.value=v;render()};
+  rg.oninput=()=>set(rg.value);nm.oninput=()=>set(nm.value);nm.onblur=()=>{nm.value=S[k]};});
+}
+function syncInputs(){CFG.forEach(([k])=>{document.getElementById("r_"+k).value=S[k];document.getElementById("n_"+k).value=S[k]})}
+const sv=(id,h)=>document.getElementById(id).innerHTML=h;
+const TIP=document.createElement("div");TIP.className="tip";document.body.appendChild(TIP);
+const tipMove=e=>{const t=e.target.closest&&e.target.closest("[data-tip]");if(!t){TIP.style.display="none";return}TIP.innerHTML=t.getAttribute("data-tip");TIP.style.display="block";const w=TIP.offsetWidth;TIP.style.left=Math.max(6,Math.min(e.clientX+14,innerWidth-w-8))+"px";TIP.style.top=(e.clientY+14)+"px"};
+document.addEventListener("pointermove",tipMove);document.addEventListener("pointerdown",tipMove);
+function ticks(mn,mx,n){const raw=(mx-mn)/n||1,p=Math.pow(10,Math.floor(Math.log10(raw))),m=raw/p,st=(m<=1?1:m<=2?2:m<=5?5:10)*p,a=Math.floor(mn/st+1e-9)*st,b=Math.ceil(mx/st-1e-9)*st,o=[];for(let v=a;v<=b+st/2;v+=st)o.push(Math.round(v/st)*st);return o}
+const cw=id=>Math.max(300,Math.round(document.getElementById(id).getBoundingClientRect().width)||760);
+function chartCombo(id,labels,bars,line,pb,W,H){
+ document.getElementById(id).setAttribute("viewBox","0 0 "+W+" "+H);
+ const L=W<560?52:64,Rr=W<560?58:70,T=24,B=48,n=labels.length,gw=(W-L-Rr)/n;
+ const all=bars.flatMap(s=>s.v),tk=ticks(Math.min(0,...all),Math.max(0,...all)*1.35,6),lmn=tk[0],lmx=tk[tk.length-1];
+ const y=v=>T+(lmx-v)*(H-T-B)/(lmx-lmn);
+ const imax=Math.max(0,...line.v.filter(v=>v!=null));
+ const F=[0.05,0.1,0.2,0.25,0.4,0.5,0.8,1,2,4,5,8,10,20,50,100].find(f=>f*lmx>=imax)||100;
+ const cx=i=>L+i*gw+gw/2;let g="";
+ tk.forEach(v=>{g+=`<line x1="${L}" x2="${W-Rr}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${L-8}" y="${y(v)+4}" text-anchor="end">${f0(v)}</text>`;if(v>=0)g+=`<text x="${W-Rr+8}" y="${y(v)+4}">${f0(v*F)}%</text>`});
+ g+=`<line x1="${L}" x2="${W-Rr}" y1="${y(0)}" y2="${y(0)}" stroke="var(--mute)"/>`;
+ const bw=Math.min(56,gw/2.4);
+ labels.forEach((lb,i)=>{g+=`<text x="${cx(i)}" y="${H-B+18}" text-anchor="middle">${lb}</text>`;
+  bars.forEach((s,j)=>{const v=s.v[i],x=cx(i)+(j-1)*bw,yy=y(Math.max(v,0)),hh=Math.abs(y(v)-y(0));
+   g+=`<rect class="hv" x="${x}" y="${yy}" width="${bw-2}" rx="3" height="${Math.max(hh,.5)}" fill="${s.c}" data-tip="<b>Tahun ${lb}</b><br>${s.n}: Rp ${f2(v)} juta"/>${W>=560?`<text x="${x+bw/2-1}" y="${v>=0?yy-6:yy+hh+14}" text-anchor="middle" class="h" style="fill:var(--ink)">${f0(v)}</text>`:""}`})});
+ const pts=line.v.map((v,i)=>v==null?null:[cx(i),y(v/F),v]);let seg=[];
+ const flush=()=>{if(seg.length>1)g+=`<polyline fill="none" stroke="${line.c}" stroke-width="2.5" points="${seg.map(p=>p[0]+","+p[1]).join(" ")}"/>`;seg=[]};
+ pts.forEach(p=>{if(p)seg.push(p);else flush()});flush();
+ pts.forEach((p,i)=>{if(p)g+=`<circle class="hv" cx="${p[0]}" cy="${p[1]}" r="5" fill="${line.c}" stroke="var(--card)" stroke-width="2" data-tip="<b>Tahun ${labels[i]}</b><br>${line.n}: ${p[2].toFixed(1)}%"/><text x="${p[0]}" y="${p[1]-12}" text-anchor="middle" class="h" style="fill:var(--ink);font-weight:600">${f0(p[2])}%</text>`});
+ if(pb!=null){const px=cx(0)+pb*gw;g+=`<line x1="${px}" x2="${px}" y1="${T}" y2="${H-B}" stroke="var(--cr)" stroke-width="2" stroke-dasharray="6 4"/><text x="${px+8}" y="${T+12}" class="h" style="fill:var(--cr);font-weight:600">Payback: ${pb.toFixed(2)} tahun</text>`}
+ g+=`<text transform="translate(14 ${(T+H-B)/2}) rotate(-90)" text-anchor="middle">Kumulatif nilai (juta Rp)</text><text transform="translate(${W-10} ${(T+H-B)/2}) rotate(90)" text-anchor="middle">IRR kumulatif (%)</text><text x="${(L+W-Rr)/2}" y="${H-6}" text-anchor="middle">Tahun</text>`;
+ sv(id,g);
+}
+function chartBars(id,labels,series,W,H){
+ document.getElementById(id).setAttribute("viewBox","0 0 "+W+" "+H);
+ const L=56,Rr=14,T=14,B=30,n=labels.length,gw=(W-L-Rr)/n;
+ const all=series.flatMap(s=>s.v),tk=ticks(Math.min(0,...all),Math.max(0,...all),5),mn=tk[0],mx=tk[tk.length-1];
+ const y=v=>T+(mx-v)*(H-T-B)/(mx-mn);let g="";
+ tk.forEach(v=>{g+=`<line x1="${L}" x2="${W-Rr}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${L-8}" y="${y(v)+4}" text-anchor="end">${f0(v)}</text>`});
+ g+=`<line x1="${L}" x2="${W-Rr}" y1="${y(0)}" y2="${y(0)}" stroke="var(--mute)"/>`;
+ const bw=Math.min(48,gw/(series.length+1));
+ labels.forEach((lb,i)=>{const x0=L+i*gw+gw/2-bw*series.length/2;g+=`<text x="${L+i*gw+gw/2}" y="${H-8}" text-anchor="middle">${lb}</text>`;
+  series.forEach((s,j)=>{const v=s.v[i],yy=y(Math.max(v,0)),hh=Math.abs(y(v)-y(0));g+=`<rect class="hv" x="${x0+j*bw}" y="${yy}" width="${bw-3}" rx="3" height="${Math.max(hh,.5)}" fill="${s.c}" data-tip="<b>Tahun ${lb.replace("T","")}</b><br>${s.n}: Rp ${f2(v)} juta"/>${bw>=24&&Math.abs(v)>=.5?`<text x="${x0+j*bw+(bw-3)/2}" y="${v>=0?yy-6:yy+hh+14}" text-anchor="middle" class="h" style="fill:var(--ink)">${f0(v)}</text>`:""}`})});
+ sv(id,g);
+}
+function render(){
+ const c=calc(S),R=c.R,ok=c.npv>0&&c.irr!=null&&c.irr>c.r&&c.bc>1;
+ const kv=(l,v,cap,cls="")=>`<div class="kpi"><div class="l">${l}</div><div class="v ${cls}">${v}</div><div class="c">${cap}</div></div>`;
+ const v=document.getElementById("verdict");v.className="verdict "+(ok?"ok":"");
+ v.innerHTML=`<b>${ok?"Layak":"Belum layak"}.</b> NPV ${f2(c.npv/1e6)} juta pada discount rate ${(c.r*100).toFixed(2)}%, B/C ratio ${c.bc.toFixed(3)}, IRR ${c.irr==null?"n/a":(c.irr*100).toFixed(1)+"%"}.`;
+ const hs=document.getElementById("hs");
+ hs.innerHTML=`<div class="st">${ok?"Layak":"Belum layak"} pada discount rate ${(c.r*100).toFixed(2)}%</div><div class="big ${c.npv>0?"pos":"neg"}" id="hnpv">Rp ${jt(c.npv)} jt</div><div class="hc">Net present value, 5 tahun</div><div class="hr"><div><b>${c.irr==null?"n/a":(c.irr*100).toFixed(1)+"%"}</b><span>IRR</span></div><div><b>${c.pay==null?"> 5 th":f2(c.pay*12)+" bln"}</b><span>Payback</span></div></div>`;
+ if(!window._cu){window._cu=1;if(!matchMedia("(prefers-reduced-motion: reduce)").matches){const el=document.getElementById("hnpv"),end=c.npv/1e6,t0=performance.now();const st=n=>{const p=Math.min(1,(n-t0)/900);el.textContent="Rp "+f2(end*(1-Math.pow(1-p,3)))+" jt";if(p<1&&el.isConnected)requestAnimationFrame(st)};requestAnimationFrame(st)}}
+ sv("kpis",
+  kv("NPV","Rp "+jt(c.npv)+" jt","Layak jika NPV > 0",c.npv>0?"pos":"neg")+
+  kv("IRR",c.irr==null?"n/a":(c.irr*100).toFixed(1)+"%","Selisih dengan discount rate: "+(c.irr==null?"n/a":((c.irr-c.r)*100).toFixed(1)+" poin"),c.irr>c.r?"pos":"neg")+
+  kv("B/C Ratio",c.bc.toFixed(3),"PV Revenue / (PV OPEX + PV CAPEX)",c.bc>1?"pos":"neg")+
+  kv("Profitability Index",c.pi==null?"n/a":c.pi.toFixed(2),"PV Operating CF / PV CAPEX")+
+  kv("Payback",c.pay==null?"> 5 th":f2(c.pay*12)+" bln",c.pay==null?"Belum kembali":f2(c.pay)+" tahun")+
+  kv("Discounted payback",c.dpay==null?"> 5 th":f2(c.dpay*12)+" bln",c.dpay==null?"Belum kembali":f2(c.dpay)+" tahun")+
+  kv("Discount rate",(c.r*100).toFixed(2)+"%","SBN + inflasi")+
+  kv("CAPEX awal","Rp "+jt(c.capex)+" jt","Total investasi tahun 0"));
+ sv("be",
+  kv("Volume minimum",c.be.vol==null?"n/a":c.be.vol.toFixed(1)+" helm/hari","Dari asumsi "+S.vol+" helm/hari")+
+  kv("Penurunan volume maks.",c.be.drop==null?"n/a":(c.be.drop*100).toFixed(1)+"%","Sebelum NPV menjadi nol")+
+  kv("Harga minimum","Rp "+(c.be.price==null?"n/a":f0(c.be.price))+"/helm","Dari asumsi Rp "+f0(S.harga)));
+ chartCombo("c1",["0","1","2","3","4","5"],[{n:"Kumulatif Net Cash Flow",c:"var(--acc)",v:R.map(x=>x.cum/1e6)},{n:"NPV kumulatif (PV Net Cash Flow)",c:"var(--tl)",v:R.map(x=>x.cumpv/1e6)}],{n:"IRR kumulatif sampai tahun ke-t",c:"var(--lt)",v:R.map((x,i)=>{if(!i)return null;const q=irrOf(R.slice(0,i+1).map(y=>y.net));return q==null?null:q*100})},c.pay,cw("c1"),cw("c1")<560?340:420);
+ chartBars("c2",["T0","T1","T2","T3","T4","T5"],[{n:"Revenue",c:"var(--acc)",v:R.map(x=>x.rev/1e6)},{n:"OPEX",c:"var(--cr)",v:R.map(x=>x.opex/1e6)},{n:"Net CF",c:"var(--tl)",v:R.map(x=>x.net/1e6)}],cw("c2"),cw("c2")<560?260:320);
+ const row=(l,k,cls="")=>`<tr class="${cls}"><td>${l}</td>${R.map(x=>`<td>${x[k]===0?"-":jt(x[k])}</td>`).join("")}</tr>`;
+ sv("ws",`<tr><th>Deskripsi</th>${R.map(x=>`<th>${x.t}</th>`).join("")}</tr>
+ <tr class="grp"><td>VOLUME</td><td colspan="6"></td></tr><tr class="ind"><td>Volume bulanan (helm)</td>${R.map(x=>`<td>${f0(x.vm)}</td>`).join("")}</tr>
+ <tr class="grp"><td>REVENUE</td><td colspan="6"></td></tr>${row("Revenue (volume x harga x 12)","rev","ind")}
+ <tr class="grp"><td>COST</td><td colspan="6"></td></tr>${row("OPEX","opex","ind")}${row("CAPEX","cap","ind")}
+ ${row("Operating cash flow","ocf","tot")}${row("Net cash flow","net","tot")}${row("Kumulatif net cash flow","cum","")}
+ <tr class="grp"><td>NILAI SEKARANG (PV)</td><td colspan="6"></td></tr>
+ <tr class="ind"><td>Faktor diskonto</td>${R.map(x=>`<td>${x.df.toFixed(4)}</td>`).join("")}</tr>
+ ${row("PV Revenue","pvr","ind")}${row("PV OPEX","pvo","ind")}${row("PV CAPEX","pvc","ind")}${row("PV net cash flow","pvn","tot")}${row("Kumulatif PV (NPV)","cumpv","")}<tr class="ind"><td>IRR kumulatif sampai tahun ke-t</td>${R.map((x,i)=>`<td>${i==0?"-":(()=>{const q=irrOf(R.slice(0,i+1).map(y=>y.net));return q==null?"n/a":(q*100).toFixed(1)+"%"})()}</td>`).join("")}</tr>
+ <tr class="tot"><td>Revenue Cost Ratio (PV)</td><td colspan="6" style="text-align:right">${c.bc.toFixed(4)}</td></tr>`);
+ const mo=c.opexY/12;
+ sv("topx",`<tr><th>Kategori OPEX</th><th>Item</th><th>Detail / brand</th><th>Satuan</th><th>Rp/bulan</th><th>Sumber</th><th>Tahun</th><th>Porsi</th></tr>`+OPX.map(r=>`<tr><td>${r[6]}</td><td class="tx">${r[0]}</td><td class="tx">${r[1]}</td><td>${r[2]}</td><td>${f0(r[3]*(1+S.dOpex/100))}</td><td>${r[4]}</td><td>${r[5]}</td><td><div class="bar"><i style="width:${r[3]/OPXT*100}%"></i></div></td></tr>`).join("")+`<tr class="tot"><td>Total OPEX per bulan</td><td colspan="3"></td><td>${f0(mo)}</td><td colspan="3"></td></tr><tr class="tot"><td>Total OPEX per tahun</td><td colspan="3"></td><td>${f0(c.opexY)}</td><td colspan="3"></td></tr>`);
+ sv("tkap",`<tr><th>Kapasitas mesin</th><th>Detail / brand</th><th>Kapasitas</th><th>Jumlah mesin</th></tr><tr><td>Mesin Cuci Helm</td><td class="tx">Sprint</td><td>6 helm/jam</td><td>1 mesin</td></tr>`);
+ sv("tcap",`<tr><th>CAPEX</th><th>Brand / detail</th><th>Satuan</th><th>Harga (Rp)</th><th>Sumber</th><th>Tahun</th><th>Porsi</th></tr>`+CAP.map(r=>`<tr><td>${r[0]}</td><td class="tx">${r[1]}</td><td>${r[2]}</td><td>${f0(r[3]*(1+S.dCapex/100))}</td><td>${r[4]}</td><td>${r[5]}</td><td><div class="bar"><i style="width:${r[3]/CAPT*100}%"></i></div></td></tr>`).join("")+`<tr class="tot"><td>Total CAPEX</td><td colspan="2"></td><td>${f0(c.capex)}</td><td colspan="3"></td></tr>`);
+ const vols=[24,30,36,42,48],ops=[-20,-10,0,10,20];
+ sv("tsens",`<tr><th>Volume/hari \\ Perubahan OPEX</th>${ops.map(o=>`<th>${o>0?"+":""}${o}%</th>`).join("")}</tr>`+vols.map(vv=>`<tr><td>${vv} helm/hari</td>${ops.map(o=>{const n=calc({...S,vol:vv,dOpex:o}).npv;return`<td class="${n<0?"neg":""} ${vv==S.vol&&o==S.dOpex?"hl":""}">${jt(n)}</td>`}).join("")}</tr>`).join(""));
+}
+document.getElementById("reset").onclick=()=>{S={...DEF};syncInputs();render()};
+document.querySelectorAll('nav a[href^="#"]').forEach(a=>a.addEventListener("click",e=>{e.preventDefault();const t=document.getElementById(a.getAttribute("href").slice(1));if(t)t.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"})}));
+build();syncInputs();render();
+addEventListener("resize",()=>{clearTimeout(window._rt);window._rt=setTimeout(render,120)});
+document.querySelectorAll("nav a").forEach(a=>a.addEventListener("click",e=>{e.preventDefault();const t=document.querySelector(a.getAttribute("href"));if(t)t.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"})}));
+</script>
+</body>
+</html>
